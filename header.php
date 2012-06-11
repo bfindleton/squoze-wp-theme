@@ -33,7 +33,6 @@
 		echo ' | ' . sprintf( __( 'Page %s', 'squoze' ), max( $paged, $page ) );
 
 	?></title>
-<link rel="profile" href="http://gmpg.org/xfn/11" />
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
 <!--[if lt IE 9]>
 <script src="<?php echo get_template_directory_uri(); ?>/js/html5.js" type="text/javascript"></script>
@@ -55,19 +54,18 @@
 		<hgroup>
 			<h1 class="site-title"><a href="<?php echo home_url( '/' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
 			<h2 class="site-description"><?php bloginfo( 'description' ); ?></h2>
-			<div id="header-search">
-				<?php get_search_form(); ?>
-			</div>
+			<h4 id="header-search"><?php get_search_form(); ?></h4>
 		</hgroup>
 
 		<nav role="navigation" class="site-navigation main-navigation">
 			<h1 class="assistive-text"><?php _e( 'Menu', 'squoze' ); ?></h1>
 			<div class="assistive-text skip-link"><a href="#content" title="<?php esc_attr_e( 'Skip to content', 'squoze' ); ?>"><?php _e( 'Skip to content', 'squoze' ); ?></a></div>
-
-			<?php wp_nav_menu( array( 'theme_location' => 'primary' ) ); ?>
+			<div class="nav"><?php wp_nav_menu( array('menu' => __('Main Nav', 'squoze'), 'theme_location' => 'main', 'link_before' => '<span>', 'link_after' => '</span>')) ?></div>
+			<!-- A secondary menu, use it where thou wilt -->
+			<?php wp_nav_menu( array( 'menu' => __('Secondary Menu', 'squoze'), 'theme_location' => 'secondary' ) ); ?>
 		</nav>
 	</header><!-- #masthead .site-header -->
 
-	<div id="main">
+	<div id="below-search"></div>
 
-		<div id="below-search"></div>
+	<div id="main" class="row-fluid">

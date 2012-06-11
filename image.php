@@ -7,9 +7,12 @@
  */
 
 get_header();
+
+$content_columns = squoze_get_layout();
+
 ?>
 
-		<div id="primary" class="site-content image-attachment">
+		<div id="primary" class="site-content span<?php echo $content_columns; ?> image-attachment">
 			<div id="content" role="main">
 
 			<?php while ( have_posts() ) : the_post(); ?>
@@ -107,5 +110,7 @@ get_header();
 
 			</div><!-- #content -->
 		</div><!-- #primary .site-content -->
+
+<?php squoze_which_sidebars() ?>
 
 <?php get_footer(); ?>

@@ -25,6 +25,13 @@ if ( ! function_exists( 'squoze_setup' ) ):
  * @since squoze 1.0
  */
 function squoze_setup() {
+	/**
+	 * Options Framework by Devin Price
+	 */
+	if ( !function_exists( 'optionsframework_init' ) ) {
+		define( 'OPTIONS_FRAMEWORK_DIRECTORY', get_template_directory_uri() . '/inc/' );
+		require_once dirname( __FILE__ ) . '/inc/options-framework.php';
+	}
 
 	/**
 	 * Custom template tags for this theme.
@@ -37,12 +44,24 @@ function squoze_setup() {
 	require( get_template_directory() . '/inc/tweaks.php' );
 
 	/**
-	 * Custom Theme Options
+	 * Custom post types
 	 */
-	require( get_template_directory() . '/inc/theme-options/theme-options.php' );
+	require( get_template_directory() . '/inc/product-type.php' );
 
-	// Get About widget.
-	require( get_template_directory() . '/inc/widgets.php' );
+	// Get widgets.
+	require( get_template_directory() . '/lib/class-widgets.php' );
+
+	/**
+	 * Shortcode class
+	 */
+    require( get_template_directory() . '/lib/class-shortcode-mgr.php' );
+
+	/**
+	 * Add the Shortcodes
+	 */
+	$scm = new Shortcode_Mgr();
+	add_shortcode('squoze_catalog_category', array($scm, 'squoze_add_category'));
+	add_shortcode('squoze_catalog_item',     array($scm, 'squoze_add_item'));
 
 	/**
 	 * WordPress.com-specific functions and definitions
@@ -85,10 +104,13 @@ function squoze_setup() {
 	add_theme_support( 'post-formats', array( 'aside', ) );
 
 	/**
-	 * This theme uses wp_nav_menu() in one location.
+	 * This theme uses wp_nav_menu() in two locations.
 	 */
 	register_nav_menus( array(
 		'primary' => __( 'Primary Menu', 'squoze' ),
+	) );
+	register_nav_menus( array(
+		'secondary' => __( 'Secondary Menu', 'squoze' ),
 	) );
 }
 endif; // squoze_setup
@@ -163,80 +185,57 @@ function squoze_widgets_init() {
 add_action( 'widgets_init', 'squoze_widgets_init' );
 
 /**
- * Count the number of footer sidebars to enable dynamic classes and styles for the footer
+ * Get layout and sidebar info
  */
-function squoze_footer_sidebar_class() {
-	$count = 0;
+ function squoze_get_layout() {
 
-	if ( is_active_sidebar( 'sidebar-3' ) )
-		$count++;
-
-	if ( is_active_sidebar( 'sidebar-4' ) )
-		$count++;
-
-	if ( is_active_sidebar( 'sidebar-5' ) )
-		$count++;
-
-	if ( is_active_sidebar( 'sidebar-6' ) )
-		$count++;
-
-	$class = '';
-
-	switch ( $count ) {
-		case '1':
-			$class = 'one';
+	 // Get layout and column spans
+	switch ( of_get_option( 'sidebar_layout' ) ) {
+		case 'both':
+			get_sidebar( 'two' );
+			$leftside = of_get_option( 'left_sidebar_columns', 3 );
+			$rightside = of_get_option( 'right_sidebar_columns', 3 );
+			$content_columns = 12 - $leftside - $rightside;
+			wp_localize_script(
+					'squoze-js',
+					'layout_object',
+					array(
+						'layout' => 'both',
+					)
+			);
 			break;
-		case '2':
-			$class = 'two';
+		case 'left':
+			$leftside = of_get_option( 'left_sidebar_columns' );
+			$content_columns = 12 - $leftside;
+			$content_columns .= " float_right";
 			break;
-		case '3':
-			$class = 'three';
+		case 'right':
+			$rightside = of_get_option( 'right_sidebar_columns' );
+			$content_columns = 12 - $rightside;
 			break;
-		case '4':
-			$class = 'four';
-			break;
-	}
-
-	if ( $class )
-		echo 'class="' . $class . '"';
-}
-
-function squoze_footer_sidebar_size() {
-	$count = 0;
-
-	if ( is_active_sidebar( 'sidebar-3' ) )
-		$count++;
-
-	if ( is_active_sidebar( 'sidebar-4' ) )
-		$count++;
-
-	if ( is_active_sidebar( 'sidebar-5' ) )
-		$count++;
-
-	if ( is_active_sidebar( 'sidebar-6' ) )
-		$count++;
-		
-	$style = '';
-
-	switch ( $count ) {
-		case '1':
-			$style = '100';
-			break;
-		case '2':
-			$style = '50';
-			break;
-		case '3':
-			$style = '33.3';
-			break;
-		case '4':
-			$style = '25';
+		default:
+			$content_columns = 12;
 			break;
 	}
-
-	if ( $style )
-		echo 'style="width:' . $style . '%;"';
+	
+	return $content_columns;
 }
 
+function squoze_which_sidebars() {
+
+	switch ( of_get_option( 'sidebar_layout' ) ) {
+		case 'both':
+			get_sidebar();
+			break;
+		case 'left':
+		case 'right':
+			get_sidebar();
+			get_sidebar( 'two' );
+			break;
+		default:
+			break;
+	}
+}
 
 /**
  * Enqueue scripts and styles
@@ -245,11 +244,15 @@ function squoze_scripts() {
 	global $post;
 
 	wp_enqueue_style( 'style', get_stylesheet_uri() );
-
-	wp_enqueue_script( 'small-menu', get_template_directory_uri() . '/js/small-menu.js', array( 'jquery' ), '20120206', true );
 	
-	wp_enqueue_script( 'respond', get_template_directory_uri() . '/js/respond.min.js' );	
+	if( $custom_styles = of_get_option( 'custom_styles' ) ) {
+		wp_enqueue_style( 'squoze-custom-css', $custom_styles );
+	}
 
+	wp_enqueue_script( 'respond', get_template_directory_uri() . '/js/respond.min.js', false, '1.1.0' );	
+
+	wp_enqueue_script( 'squoze-js', get_template_directory_uri() . '/js/squoze.js', array( 'jquery' ), '20120206', true );
+	
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
@@ -261,11 +264,38 @@ function squoze_scripts() {
 add_action( 'wp_enqueue_scripts', 'squoze_scripts' );
 
 /**
- * Implement the Custom Header feature
+ * Implement the View feature
  */
-// require( get_template_directory() . '/inc/custom-header.php' );
+function squoze_get_view($template, $args, $content = null) {
+	$filename = get_template_directory() . '/views/' . $template;
+
+	ob_start();
+	include $filename;
+	$view = ob_get_contents();
+	ob_end_clean();
+
+	return $view;
+}
 
 /**
- * Remove annoying stuff
+ * Where the post has no post title, but must still display a link to the single-page post view.
+ * Nicked from Emil Uzelac's Responsive theme
  */
-remove_action('wp_head', 'wp_generator');
+add_filter('the_title', 'squoze_title');
+
+function squoze_title($title) {
+	if ($title == '') {
+		return __('Untitled','squoze');
+	} else {
+		return $title;
+	}
+}
+
+/**
+ * Remove annoying, dangerous stuff
+ */
+function squoze_remove_version() {
+	return '';
+}
+add_filter( 'the_generator', 'squoze_remove_version' );
+remove_action( 'wp_head', 'wlwmanifest_link');

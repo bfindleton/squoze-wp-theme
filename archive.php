@@ -8,9 +8,13 @@
  * @since squoze 1.0
  */
 
-get_header(); ?>
+get_header();
 
-		<section id="primary" class="site-content">
+$content_columns = squoze_get_layout();
+
+?>
+
+		<section id="primary" class="site-content span<?php echo $content_columns; ?>">
 			<div id="content" role="main">
 
 			<?php if ( have_posts() ) : ?>
@@ -46,7 +50,7 @@ get_header(); ?>
 								printf( __( 'Yearly Archives: %s', 'squoze' ), '<span>' . get_the_date( 'Y' ) . '</span>' );
 
 							} else {
-								_e( 'Archives', 'squoze' );
+								_e( 'Archives' , 'squoze' );
 
 							}
 						?>
@@ -73,7 +77,6 @@ get_header(); ?>
 
 				<?php /* Start the Loop */ ?>
 				<?php while ( have_posts() ) : the_post(); ?>
-
 					<?php
 						/* Include the Post-Format-specific template for the content.
 						 * If you want to overload this in a child theme then include a file
@@ -95,5 +98,6 @@ get_header(); ?>
 			</div><!-- #content -->
 		</section><!-- #primary .site-content -->
 
-<?php get_sidebar(); ?>
+<?php squoze_which_sidebars() ?>
+
 <?php get_footer(); ?>

@@ -1,8 +1,8 @@
 <?php
 /**
- * The template for displaying all pages.
+ * Template Name: 2 columns - sidebar right
  *
- * This is the template that displays all pages by default.
+ * This is the template that displays pages with 2 columns, sidebar on the right.
  * Please note that this is the WordPress construct of pages
  * and that other 'pages' on your WordPress site will use a
  * different template.
@@ -13,7 +13,7 @@
 
 get_header();
 
-$content_columns = squoze_get_layout();
+$content_columns = 12 - of_get_option( 'right_sidebar_columns' );
 
 ?>
 
@@ -31,6 +31,6 @@ $content_columns = squoze_get_layout();
 			</div><!-- #content -->
 		</div><!-- #primary .site-content -->
 
-<?php squoze_which_sidebars() ?>
-
+<?php get_sidebar(); ?>
+<?php get_sidebar( 'two' ); ?>
 <?php get_footer(); ?>

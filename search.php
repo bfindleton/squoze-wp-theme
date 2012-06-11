@@ -6,9 +6,13 @@
  * @since squoze 1.0
  */
 
-get_header(); ?>
+get_header();
 
-		<section id="primary" class="site-content">
+$content_columns = squoze_get_layout();
+
+?>
+
+		<section id="primary" class="site-content span<?php echo $content_columns; ?>">
 			<div id="content" role="main">
 
 			<?php if ( have_posts() ) : ?>
@@ -37,5 +41,6 @@ get_header(); ?>
 			</div><!-- #content -->
 		</section><!-- #primary .site-content -->
 
-<?php get_sidebar(); ?>
+<?php squoze_which_sidebars() ?>
+
 <?php get_footer(); ?>

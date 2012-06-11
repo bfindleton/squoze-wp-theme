@@ -1,8 +1,8 @@
 <?php
 /**
- * The template for displaying all pages.
+ * Template Name: 3 columns - both sidebars
  *
- * This is the template that displays all pages by default.
+ * This is the template that displays pages with 3 columns, sidebar on the left and right.
  * Please note that this is the WordPress construct of pages
  * and that other 'pages' on your WordPress site will use a
  * different template.
@@ -13,7 +13,18 @@
 
 get_header();
 
-$content_columns = squoze_get_layout();
+$leftside = of_get_option( 'left_sidebar_columns', 3 );
+$rightside = of_get_option( 'right_sidebar_columns', 3 );
+$content_columns = 12 - $leftside - $rightside;
+wp_localize_script(
+		'squoze-js',
+		'layout_object',
+		array(
+			'layout' => 'both',
+		)
+);
+
+get_sidebar( 'two' );
 
 ?>
 
@@ -31,6 +42,5 @@ $content_columns = squoze_get_layout();
 			</div><!-- #content -->
 		</div><!-- #primary .site-content -->
 
-<?php squoze_which_sidebars() ?>
-
+<?php get_sidebar(); ?>
 <?php get_footer(); ?>

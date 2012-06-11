@@ -1,0 +1,16 @@
+<?php // Item template ?>
+
+<article class="categoryItem<?php if($args['class']) : echo ' ' . $args['class']; endif; ?>"<?php if($args['style']) : echo ' style="' . $args['style'] . '"'; endif; ?>>
+
+    <section class="ci_picture">Picture</section>
+
+    <section class="ci_title">Title</section>
+
+    <section class="ci_description">Description</section>
+	
+	<?php if ( $args['showprice'] === "true" ) : ?>
+	<section class="ci_price">Price</section>
+	<?php endif; ?>
+
+</article>
+
