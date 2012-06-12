@@ -7,7 +7,7 @@ Tested up to: 3.4
 Stable tag: 1.0
 License: GPLv2
 
-Squoze is a "bare" developer's theme, not so much a framework as a toolkit to kickstart your next theme project.
+Squoze is a "bare" developer's theme for WP 3.4, not so much a framework as a toolkit to kickstart your next theme project.
 
 == Description ==
 
