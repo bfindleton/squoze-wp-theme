@@ -60,9 +60,9 @@
 		<nav role="navigation" class="site-navigation main-navigation">
 			<h1 class="assistive-text"><?php _e( 'Menu', 'squoze' ); ?></h1>
 			<div class="assistive-text skip-link"><a href="#content" title="<?php esc_attr_e( 'Skip to content', 'squoze' ); ?>"><?php _e( 'Skip to content', 'squoze' ); ?></a></div>
-			<div class="nav"><?php wp_nav_menu( array('menu' => __('Main Nav', 'squoze'), 'theme_location' => 'main', 'link_before' => '<span>', 'link_after' => '</span>')) ?></div>
+			<div class="nav"><?php wp_nav_menu( array('menu' => __('Primary Menu', 'squoze'), 'theme_location' => 'main', 'link_before' => '<span>', 'link_after' => '</span>')) ?></div>
 			<!-- A secondary menu, use it where thou wilt -->
-			<?php wp_nav_menu( array( 'menu' => __('Secondary Menu', 'squoze'), 'theme_location' => 'secondary' ) ); ?>
+			<?php wp_nav_menu( array( 'menu' => __('Secondary Menu', 'squoze'), 'theme_location' => 'secondary', 'link_before' => '<span>', 'link_after' => '</span>' ) ); ?>
 		</nav>
 	</header><!-- #masthead .site-header -->
 

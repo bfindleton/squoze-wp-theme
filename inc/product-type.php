@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Products custom post type
  *
