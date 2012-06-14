@@ -62,6 +62,10 @@ This was born out of making my old, static site responsive, or "squeezable" as i
 
 == Change log ==
 
+= ver 1.0.1 =
+* Changed screenshot for review compliance
+* Removed non-printable characters from one of the source files
+
 = ver 1.0 =
 * Initial rollout, no changes
 
