@@ -4,7 +4,7 @@ Donate link: http://arbalestmedia.com/squoze
 Tags: responsive, one-column, two-column, three-column, left-sidebar, right-sidebar, flexible-width, custom-background, custom-colors, custom-hearder, featured-images, theme-options, translation-ready, 3.4
 Requires at least: 3.4
 Tested up to: 3.4
-Stable tag: 1.0
+Stable tag: 1.0.2
 License: GPLv2
 
 Squoze is a "bare" developer's theme for WP 3.4, not so much a framework as a toolkit to kickstart your next theme project.
@@ -61,6 +61,9 @@ Also, "* {box-sizing: border-box;}" is the first setting in the Globals section.
 This was born out of making my old, static site responsive, or "squeezable" as it were. I figured "squeezed" was pretty much off the table by this point and opted for bad grammer instead.
 
 == Change log ==
+
+= ver 1.0.2 =
+* FIXED: faulty sidebar column width switch statement
 
 = ver 1.0.1 =
 * Changed screenshot for review compliance

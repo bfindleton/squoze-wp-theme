@@ -18,7 +18,7 @@ switch ( $layout ) {
 		$rightside = of_get_option( 'right_sidebar_columns' );
 		$content_columns = $rightside;
 		break;
-	case 'none':
+	default:
 		$content_columns = 3;
 		break;
 }
